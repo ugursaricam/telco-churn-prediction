@@ -28,13 +28,13 @@ df.shape
 df.isnull().sum()
 df.info()
 
-df["Churn"] = df["Churn"].apply(lambda x: 1 if x == "Yes" else 0)
-df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors='coerce')
+df['Churn'] = df['Churn'].apply(lambda x: 1 if x == 'Yes' else 0)
+df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
 
 df.info()
 df.isnull().sum()
 
-df.iloc[df[df["TotalCharges"].isnull()].index, 19] = df[df["TotalCharges"].isnull()]["MonthlyCharges"]
+df.iloc[df[df['TotalCharges'].isnull()].index, 19] = df[df['TotalCharges'].isnull()]['MonthlyCharges']
 
 df.describe().T
 
@@ -56,7 +56,7 @@ for col in cat_cols:
 plt.figure(figsize = (5, 5))
 myexplode = (0.1, 0)
 churn = df['Churn'].value_counts()
-churn.plot(kind='pie', explode = myexplode, shadow = True, autopct = "%1.1f%%")
+churn.plot(kind='pie', explode = myexplode, shadow = True, autopct = '%1.1f%%')
 plt.show(block=True)
 
 for col in num_cols:
@@ -86,7 +86,7 @@ missing_values_table(df)
 
 df_corr(df)
 
-df.corrwith(df["Churn"]).sort_values(ascending=False)
+df.corrwith(df['Churn']).sort_values(ascending=False)
 
 ###################################
 # Visualisations
@@ -103,7 +103,7 @@ for col in num_cols:
 
 base_df = df.copy()
 
-cat_cols = [col for col in cat_cols if col not in ["Churn"]]
+cat_cols = [col for col in cat_cols if col not in ['Churn']]
 
 base_df = one_hot_encoder(base_df, cat_cols)
 
@@ -117,17 +117,17 @@ models = [('LR', LogisticRegression(random_state=SEED)),
           ('CART', DecisionTreeClassifier(random_state=SEED)),
           ('RF', RandomForestClassifier(random_state=SEED)),
           ('XGB', XGBClassifier(random_state=SEED)),
-          ("LightGBM", LGBMClassifier(random_state=SEED)),
-          ("CatBoost", CatBoostClassifier(verbose=False, random_state=SEED))]
+          ('LightGBM', LGBMClassifier(random_state=SEED)),
+          ('CatBoost', CatBoostClassifier(verbose=False, random_state=SEED))]
 
 for name, model in models:
-    cv_results = cross_validate(model, X, y, cv=10, scoring=["accuracy", "f1", "roc_auc", "precision", "recall"])
-    print(f"########## {name} ##########")
-    print(f"Accuracy: {round(cv_results['test_accuracy'].mean(), 4)}")
-    print(f"Auc: {round(cv_results['test_roc_auc'].mean(), 4)}")
-    print(f"Recall: {round(cv_results['test_recall'].mean(), 4)}")
-    print(f"Precision: {round(cv_results['test_precision'].mean(), 4)}")
-    print(f"F1: {round(cv_results['test_f1'].mean(), 4)}")
+    cv_results = cross_validate(model, X, y, cv=10, scoring=['accuracy', 'f1', 'roc_auc', 'precision', 'recall'])
+    print(f'########## {name} ##########')
+    print(f'Accuracy: {round(cv_results['test_accuracy'].mean(), 4)}')
+    print(f'Auc: {round(cv_results['test_roc_auc'].mean(), 4)}')
+    print(f'Recall: {round(cv_results['test_recall'].mean(), 4)}')
+    print(f'Precision: {round(cv_results['test_precision'].mean(), 4)}')
+    print(f'F1: {round(cv_results['test_f1'].mean(), 4)}')
 
 # ########## LR ##########
 # Accuracy: 0.8031
@@ -171,58 +171,58 @@ for name, model in models:
 ###################################
 
 # Feature based on the customer's gender and senior
-df.loc[((df['gender'] == 'Male') & (df["SeniorCitizen"]== 1)), 'SENIOR/YOUNG_GENDER'] ="senior_male"
-df.loc[((df['gender'] == 'Male') & (df["SeniorCitizen"]== 0)), 'SENIOR/YOUNG_GENDER'] ="young_male"
-df.loc[((df['gender'] == 'Female') & (df["SeniorCitizen"]== 1)), 'SENIOR/YOUNG_GENDER'] ="senior_female"
-df.loc[((df['gender'] == 'Female') & (df["SeniorCitizen"]== 0)), 'SENIOR/YOUNG_GENDER'] ="young_female"
-df.groupby("SENIOR/YOUNG_GENDER").agg({"Churn": ["mean","count"]})
+df.loc[((df['gender'] == 'Male') & (df['SeniorCitizen']== 1)), 'SENIOR/YOUNG_GENDER'] ='senior_male'
+df.loc[((df['gender'] == 'Male') & (df['SeniorCitizen']== 0)), 'SENIOR/YOUNG_GENDER'] ='young_male'
+df.loc[((df['gender'] == 'Female') & (df['SeniorCitizen']== 1)), 'SENIOR/YOUNG_GENDER'] ='senior_female'
+df.loc[((df['gender'] == 'Female') & (df['SeniorCitizen']== 0)), 'SENIOR/YOUNG_GENDER'] ='young_female'
+df.groupby('SENIOR/YOUNG_GENDER').agg({'Churn': ['mean','count']})
 
 # Creating annual categorical variable from Tenure variable
-df.loc[(df["tenure"]>=0) & (df["tenure"]<=12),"NEW_TENURE_YEAR"] = "0-1 Year"
-df.loc[(df["tenure"]>12) & (df["tenure"]<=24),"NEW_TENURE_YEAR"] = "1-2 Year"
-df.loc[(df["tenure"]>24) & (df["tenure"]<=36),"NEW_TENURE_YEAR"] = "2-3 Year"
-df.loc[(df["tenure"]>36) & (df["tenure"]<=48),"NEW_TENURE_YEAR"] = "3-4 Year"
-df.loc[(df["tenure"]>48) & (df["tenure"]<=60),"NEW_TENURE_YEAR"] = "4-5 Year"
-df.loc[(df["tenure"]>60) & (df["tenure"]<=72),"NEW_TENURE_YEAR"] = "5-6 Year"
-df.groupby("NEW_TENURE_YEAR").agg({"Churn": ["mean","count"]})
+df.loc[(df['tenure']>=0) & (df['tenure']<=12),'NEW_TENURE_YEAR'] = '0-1 Year'
+df.loc[(df['tenure']>12) & (df['tenure']<=24),'NEW_TENURE_YEAR'] = '1-2 Year'
+df.loc[(df['tenure']>24) & (df['tenure']<=36),'NEW_TENURE_YEAR'] = '2-3 Year'
+df.loc[(df['tenure']>36) & (df['tenure']<=48),'NEW_TENURE_YEAR'] = '3-4 Year'
+df.loc[(df['tenure']>48) & (df['tenure']<=60),'NEW_TENURE_YEAR'] = '4-5 Year'
+df.loc[(df['tenure']>60) & (df['tenure']<=72),'NEW_TENURE_YEAR'] = '5-6 Year'
+df.groupby('NEW_TENURE_YEAR').agg({'Churn': ['mean','count']})
 
 # Specify 1 or 2 year contract customers as Engaged
-df["NEW_Engaged"] = df["Contract"].apply(lambda x: 1 if x in ["One year","Two year"] else 0)
-df.groupby("NEW_Engaged").agg({"Churn": ["mean","count"]})
+df['NEW_Engaged'] = df['Contract'].apply(lambda x: 1 if x in ['One year','Two year'] else 0)
+df.groupby('NEW_Engaged').agg({'Churn': ['mean','count']})
 
 # Customers who do not receive any support, backup or protection
-df["NEW_noProt"] = df.apply(lambda x: 1 if (x["OnlineBackup"] != "Yes") or (x["DeviceProtection"] != "Yes") or (x["TechSupport"] != "Yes") else 0, axis=1)
-df.groupby("NEW_noProt").agg({"Churn": ["mean","count"]})
+df['NEW_noProt'] = df.apply(lambda x: 1 if (x['OnlineBackup'] != 'Yes') or (x['DeviceProtection'] != 'Yes') or (x['TechSupport'] != 'Yes') else 0, axis=1)
+df.groupby('NEW_noProt').agg({'Churn': ['mean','count']})
 
 # Customers with monthly contracts and young
-df["NEW_Young_Not_Engaged"] = df.apply(lambda x: 1 if (x["NEW_Engaged"] == 0) and (x["SeniorCitizen"] == 0) else 0, axis=1)
-df.groupby("NEW_Young_Not_Engaged").agg({"Churn": ["mean","count"]})
+df['NEW_Young_Not_Engaged'] = df.apply(lambda x: 1 if (x['NEW_Engaged'] == 0) and (x['SeniorCitizen'] == 0) else 0, axis=1)
+df.groupby('NEW_Young_Not_Engaged').agg({'Churn': ['mean','count']})
 
 # Total number of services received by the customer
 df['NEW_TotalServices'] = (df[['PhoneService', 'InternetService', 'OnlineSecurity',
                                'OnlineBackup', 'DeviceProtection', 'TechSupport',
                                'StreamingTV', 'StreamingMovies']]== 'Yes').sum(axis=1)
-df.groupby("NEW_TotalServices").agg({"Churn": ["mean","count"]})
+df.groupby('NEW_TotalServices').agg({'Churn': ['mean','count']})
 
 # Customers who buy any streaming service
-df["NEW_FLAG_ANY_STREAMING"] = df.apply(lambda x: 1 if (x["StreamingTV"] == "Yes") or (x["StreamingMovies"] == "Yes") else 0, axis=1)
-df.groupby("NEW_FLAG_ANY_STREAMING").agg({"Churn": ["mean","count"]})
+df['NEW_FLAG_ANY_STREAMING'] = df.apply(lambda x: 1 if (x['StreamingTV'] == 'Yes') or (x['StreamingMovies'] == 'Yes') else 0, axis=1)
+df.groupby('NEW_FLAG_ANY_STREAMING').agg({'Churn': ['mean','count']})
 
 # Does the customer make automatic payments?
-df["NEW_FLAG_AutoPayment"] = df["PaymentMethod"].apply(lambda x: 1 if x in ["Bank transfer (automatic)","Credit card (automatic)"] else 0)
-df.groupby("NEW_FLAG_AutoPayment").agg({"Churn": ["mean","count"]})
+df['NEW_FLAG_AutoPayment'] = df['PaymentMethod'].apply(lambda x: 1 if x in ['Bank transfer (automatic)','Credit card (automatic)'] else 0)
+df.groupby('NEW_FLAG_AutoPayment').agg({'Churn': ['mean','count']})
 
 # Average monthly payment
-df["NEW_AVG_Charges"] = df["TotalCharges"] / (df["tenure"] + 1)
-df["NEW_AVG_Charges"].mean()
+df['NEW_AVG_Charges'] = df['TotalCharges'] / (df['tenure'] + 1)
+df['NEW_AVG_Charges'].mean()
 
 # Customers who pay more than average pay
-df["NEW_Over_AVG_Payment"] = df.apply(lambda x: 1 if (x["NEW_AVG_Charges"] > df["NEW_AVG_Charges"].mean()) else 0, axis=1)
-df.groupby("NEW_Over_AVG_Payment").agg({"Churn": ["mean","count"]})
+df['NEW_Over_AVG_Payment'] = df.apply(lambda x: 1 if (x['NEW_AVG_Charges'] > df['NEW_AVG_Charges'].mean()) else 0, axis=1)
+df.groupby('NEW_Over_AVG_Payment').agg({'Churn': ['mean','count']})
 
 # Customers who do not have a contract and pay more than the average wage
-df["NEW_not_Engaged_pay_more"] = df.apply(lambda x: 1 if (x["NEW_Engaged"] == 0) and (x["MonthlyCharges"] > df["MonthlyCharges"].mean()) else 0, axis=1)
-df.groupby("NEW_not_Engaged_pay_more").agg({"Churn": ["mean","count"]})
+df['NEW_not_Engaged_pay_more'] = df.apply(lambda x: 1 if (x['NEW_Engaged'] == 0) and (x['MonthlyCharges'] > df['MonthlyCharges'].mean()) else 0, axis=1)
+df.groupby('NEW_not_Engaged_pay_more').agg({'Churn': ['mean','count']})
 
 df.head()
 
@@ -255,17 +255,17 @@ models = [('LR', LogisticRegression(random_state=SEED)),
           ('CART', DecisionTreeClassifier(random_state=SEED)),
           ('RF', RandomForestClassifier(random_state=SEED)),
           ('XGB', XGBClassifier(random_state=SEED)),
-          ("LightGBM", LGBMClassifier(random_state=SEED)),
-          ("CatBoost", CatBoostClassifier(verbose=False, random_state=SEED))]
+          ('LightGBM', LGBMClassifier(random_state=SEED)),
+          ('CatBoost', CatBoostClassifier(verbose=False, random_state=SEED))]
 
 for name, model in models:
-    cv_results = cross_validate(model, X, y, cv=10, scoring=["accuracy", "f1", "roc_auc", "precision", "recall"])
-    print(f"########## {name} ##########")
-    print(f"Accuracy: {round(cv_results['test_accuracy'].mean(), 4)}")
-    print(f"Auc: {round(cv_results['test_roc_auc'].mean(), 4)}")
-    print(f"Recall: {round(cv_results['test_recall'].mean(), 4)}")
-    print(f"Precision: {round(cv_results['test_precision'].mean(), 4)}")
-    print(f"F1: {round(cv_results['test_f1'].mean(), 4)}")
+    cv_results = cross_validate(model, X, y, cv=10, scoring=['accuracy', 'f1', 'roc_auc', 'precision', 'recall'])
+    print(f'########## {name} ##########')
+    print(f'Accuracy: {round(cv_results['test_accuracy'].mean(), 4)}')
+    print(f'Auc: {round(cv_results['test_roc_auc'].mean(), 4)}')
+    print(f'Recall: {round(cv_results['test_recall'].mean(), 4)}')
+    print(f'Precision: {round(cv_results['test_precision'].mean(), 4)}')
+    print(f'F1: {round(cv_results['test_f1'].mean(), 4)}')
 
 # ########## LR ##########
 # Accuracy: 0.8045
@@ -311,10 +311,10 @@ for name, model in models:
 # Random Forests
 rf_model = RandomForestClassifier(random_state=17)
 rf_model.get_params()
-rf_params = {"max_depth": [5, 8, None], # Ağacın maksimum derinliği
-             "max_features": [3, 5, 7, "auto"], # En iyi bölünmeyi ararken göz önünde bulundurulması gereken özelliklerin sayısı
-             "min_samples_split": [2, 5, 8, 15, 20], # Bir node'u bölmek için gereken minimum örnek sayısı
-             "n_estimators": [100, 200, 500]} # Ağaç sayısı
+rf_params = {'max_depth': [5, 8, None], # Ağacın maksimum derinliği
+             'max_features': [3, 5, 7, 'auto'], # En iyi bölünmeyi ararken göz önünde bulundurulması gereken özelliklerin sayısı
+             'min_samples_split': [2, 5, 8, 15, 20], # Bir node'u bölmek için gereken minimum örnek sayısı
+             'n_estimators': [100, 200, 500]} # Ağaç sayısı
 
 rf_best_grid = GridSearchCV(rf_model, rf_params, cv=5, n_jobs=-1, verbose=True).fit(X, y)
 rf_best_grid.best_params_ # {'max_depth': 8, 'max_features': 7, 'min_samples_split': 20, 'n_estimators': 100}
@@ -324,10 +324,10 @@ rf_final = rf_model.set_params(**rf_best_grid.best_params_, random_state=17).fit
 # XGBoost
 xgboost_model = XGBClassifier(random_state=17)
 xgboost_model.get_params()
-xgboost_params = {"learning_rate": [0.1, 0.01, 0.001],
-                  "max_depth": [5, 8, 12, 15, 20],
-                  "n_estimators": [100, 500, 1000],
-                  "colsample_bytree": [0.5, 0.7, 1]}
+xgboost_params = {'learning_rate': [0.1, 0.01, 0.001],
+                  'max_depth': [5, 8, 12, 15, 20],
+                  'n_estimators': [100, 500, 1000],
+                  'colsample_bytree': [0.5, 0.7, 1]}
 
 xgboost_best_grid = GridSearchCV(xgboost_model, xgboost_params, cv=5, n_jobs=-1, verbose=True).fit(X, y)
 xgboost_best_grid.best_params_ # {'colsample_bytree': 0.5, 'learning_rate': 0.01, 'max_depth': 5, 'n_estimators': 500}
@@ -336,9 +336,9 @@ xgboost_final = xgboost_model.set_params(**xgboost_best_grid.best_params_, rando
 # LightGBM
 lgbm_model = LGBMClassifier(random_state=17)
 lgbm_model.get_params()
-lgbm_params = {"learning_rate": [0.01, 0.1, 0.001],
-               "n_estimators": [100, 300, 500, 1000],
-               "colsample_bytree": [0.5, 0.7, 1]}
+lgbm_params = {'learning_rate': [0.01, 0.1, 0.001],
+               'n_estimators': [100, 300, 500, 1000],
+               'colsample_bytree': [0.5, 0.7, 1]}
 
 lgbm_best_grid = GridSearchCV(lgbm_model, lgbm_params, cv=5, n_jobs=-1, verbose=True).fit(X, y)
 lgbm_best_grid.best_params_ # {'colsample_bytree': 0.5, 'learning_rate': 0.01, 'n_estimators': 500}
@@ -347,9 +347,9 @@ lgbm_final = lgbm_model.set_params(**lgbm_best_grid.best_params_, random_state=1
 # CatBoost
 catboost_model = CatBoostClassifier(random_state=17, verbose=False)
 catboost_model.get_params()
-catboost_params = {"iterations": [200, 500],
-                   "learning_rate": [0.01, 0.1],
-                   "depth": [3, 6]}
+catboost_params = {'iterations': [200, 500],
+                   'learning_rate': [0.01, 0.1],
+                   'depth': [3, 6]}
 
 catboost_best_grid = GridSearchCV(catboost_model, catboost_params, cv=5, n_jobs=-1, verbose=True).fit(X, y)
 catboost_best_grid.best_params_ # {'depth': 3, 'iterations': 500, 'learning_rate': 0.01}
@@ -361,17 +361,17 @@ catboost_final = catboost_model.set_params(**catboost_best_grid.best_params_, ra
 
 final_models = [('RF', rf_final),
                 ('XGB', xgboost_final),
-                ("LightGBM", lgbm_final),
-                ("CatBoost", catboost_final)]
+                ('LightGBM', lgbm_final),
+                ('CatBoost', catboost_final)]
 
 for name, model in final_models:
-    cv_results = cross_validate(model, X, y, cv=10, scoring=["accuracy", "f1", "roc_auc", "precision", "recall"])
-    print(f"########## {name} ##########")
-    print(f"Accuracy: {round(cv_results['test_accuracy'].mean(), 4)}")
-    print(f"Auc: {round(cv_results['test_roc_auc'].mean(), 4)}")
-    print(f"Recall: {round(cv_results['test_recall'].mean(), 4)}")
-    print(f"Precision: {round(cv_results['test_precision'].mean(), 4)}")
-    print(f"F1: {round(cv_results['test_f1'].mean(), 4)}")
+    cv_results = cross_validate(model, X, y, cv=10, scoring=['accuracy', 'f1', 'roc_auc', 'precision', 'recall'])
+    print(f'########## {name} ##########')
+    print(f'Accuracy: {round(cv_results['test_accuracy'].mean(), 4)}')
+    print(f'Auc: {round(cv_results['test_roc_auc'].mean(), 4)}')
+    print(f'Recall: {round(cv_results['test_recall'].mean(), 4)}')
+    print(f'Precision: {round(cv_results['test_precision'].mean(), 4)}')
+    print(f'F1: {round(cv_results['test_f1'].mean(), 4)}')
 
 # ########## RF ##########
 # Accuracy: 0.8042
