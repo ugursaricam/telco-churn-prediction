@@ -1,3 +1,6 @@
+<img src="https://cdn.discordapp.com/attachments/1039166278151192680/1099136341389885542/Churn-Prediction-scaled.jpg" width="100%"/>
+
+
 ## Telco Customer Churn Dataset
 
 The "Telco Customer Churn" dataset is a simulated dataset that contains information about customers who have left a telecommunications company (churned) and those who have not. It is commonly used in machine learning and data analysis to understand the factors that drive customer churn and to develop models to predict which customers are most likely to churn in the future.
