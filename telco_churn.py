@@ -34,7 +34,8 @@ df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
 df.info()
 df.isnull().sum()
 
-df.iloc[df[df['TotalCharges'].isnull()].index, 19] = df[df['TotalCharges'].isnull()]['MonthlyCharges']
+df["TotalCharges"].fillna(df[df["TotalCharges"].isnull()]["MonthlyCharges"],inplace=True)
+# df.iloc[df[df['TotalCharges'].isnull()].index, 19] = df[df['TotalCharges'].isnull()]['MonthlyCharges']
 
 df.describe().T
 
